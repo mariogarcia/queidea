@@ -1,11 +1,12 @@
-from graphene import ObjectType, Schema, Field
+from graphene import ObjectType, Schema
+from graphene_sqlalchemy import SQLAlchemyConnectionField
 
 
-from queidea_graphql.links import links
+from queidea_graphql.links import graphql as graphql_links
 
 
 class Query(ObjectType):
-    link = Field(links.Link)
+    all_links = SQLAlchemyConnectionField(graphql_links.LinkConnection)
 
 
 schema = Schema(query=Query)
