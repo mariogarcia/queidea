@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "queidea-graphql"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+graphene = "^2.1"
+Flask = "^1.1"
+click = "^7.0"
+flask-graphql = "^2.0"
+sqlalchemy = "^1.3"
+graphene_sqlalchemy = "^2.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.0"
+pylint = "^2.3"
+flake8 = "^3.7"
+
+[tool.poetry.scripts]
+server_up = "manage:runserver"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
