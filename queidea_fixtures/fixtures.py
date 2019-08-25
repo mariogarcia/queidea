@@ -15,10 +15,10 @@ def create_schema():
 
 
 def create_data():
+
     """
     Adds data to database
     """
-    log.msg("fixtures/data")
     group = Group(uuid=generate_id(), name="programming")
     db_session.add(group)
     log.msg("fixtures/data/group", uuid=group.uuid, name=group.name)
@@ -31,7 +31,7 @@ def create_data():
             group_id=group.uuid)
 
         db_session.add(link)
-        log.msg("fixtures/data/link", uuid=link.uuid, uri=link.uri)
+        log.msg("fixtures/data/link", uuid=link.uuid, uri=link.uri, group=group.uuid)
 
     try:
         db_session.commit()
