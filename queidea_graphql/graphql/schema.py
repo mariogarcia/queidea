@@ -19,6 +19,7 @@ class Mutation(ObjectType):
     Represents all operations to create/modify/delete instances
     """
     create_group = graphql_groups.CreateGroup.Field()
+    create_link = graphql_links.CreateLink.Field()
 
 
 schema = Schema(query=Query, mutation=Mutation)
