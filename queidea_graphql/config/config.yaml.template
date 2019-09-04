@@ -1,0 +1,5 @@
+database:
+    url: postgresql+pg8000://postgres:postgres@localhost:5432/queidea
+security:
+    secret: bla
+    algorithm: RSA
