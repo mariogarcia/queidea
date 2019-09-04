@@ -1,5 +1,5 @@
-from queidea_graphql.config.yaml import config
 from jwt import InvalidTokenError, decode
+from queidea_graphql.config.yaml import config
 from queidea_graphql.graphql.errors import GenericError
 
 
