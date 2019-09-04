@@ -7,8 +7,8 @@ def get_jwt_payload(authorization_value, auth_header_prefix=None, secret=None, a
     """
     Checks whether the token is valid and it carries a valid identity
     """
-    secret = secret or config['security']['secret']
-    algorithm = algorithm or config['security']['algorithm']
+    secret = secret or config.security.secret
+    algorithm = algorithm or config.security.algorithm
     auth_header_prefix = auth_header_prefix or "JWT"
 
     try:
