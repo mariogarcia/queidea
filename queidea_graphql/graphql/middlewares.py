@@ -21,6 +21,8 @@ class AuthenticationMiddleware(object):
         self.resolve_identity = resolve_identity
         self.get_jwt_payload_fn = get_jwt_payload_fn
         self.auth_header_prefix = auth_header_prefix
+        self.secret = secret
+        self.algorithm = algoritm
         self.enabled = enabled
 
     def resolve(self, next, root, info, **kwargs):
@@ -56,7 +58,7 @@ class AuthenticationMiddleware(object):
             info.context = info.context.copy()
             info.context.update(user_info)
         except GenericError as e:
-            log.error("[middleware/auth/error]", local_request.headers)
+            log.error("middleware/auth/error", headers=local_request.headers)
             return Promise.reject(GraphQLError(e.message))
 
         # if auth was present and it auth checking was successful then
