@@ -123,6 +123,18 @@ itsdangerous = ">=0.24"
 
 [[package]]
 category = "main"
+description = "A Flask extension adding a decorator for CORS support"
+name = "flask-cors"
+optional = false
+python-versions = "*"
+version = "3.0.8"
+
+[package.dependencies]
+Flask = ">=0.9"
+Six = "*"
+
+[[package]]
+category = "main"
 description = "Adds GraphQL support to your Flask application"
 name = "flask-graphql"
 optional = false
@@ -482,7 +494,7 @@ version = "0.6.0"
 more-itertools = "*"
 
 [metadata]
-content-hash = "e7d0d904861a639e338337f9d8f9d8160884d0257cfe7a398a5eef7e8cc2e07c"
+content-hash = "796304161b63929fbc8bde0991bb9239cb0b9bc093fbdf358446d6f63354f5fc"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -498,6 +510,7 @@ cryptography = ["24b61e5fcb506424d3ec4e18bca995833839bf13c59fc43e530e488f28d46b8
 entrypoints = ["589f874b313739ad35be6e0cd7efde2a4e9b6fea91edcc34e58ecbb8dbe56d19", "c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451"]
 flake8 = ["19241c1cbc971b9962473e4438a2ca19749a7dd002dd1a946eaba171b4114548", "8e9dfa3cecb2400b3738a42c54c3043e821682b9c840b0448c0503f781130696"]
 flask = ["13f9f196f330c7c2c5d7a5cf91af894110ca0215ac051b5844701f2bfd934d52", "45eb5a6fd193d6cf7e0cf5d8a5b31f83d5faae0293695626f539a823e93b13f6"]
+flask-cors = ["72170423eb4612f0847318afff8c247b38bd516b7737adfc10d1c2cdbb382d16", "f4d97201660e6bbcff2d89d082b5b6d31abee04b1b3003ee073a6fd25ad1d69a"]
 flask-graphql = ["b4e23dfd767f7028835208db0bfa7145f59467225882e6d4f560d15c09f32de8"]
 graphene = ["09165f03e1591b76bf57b133482db9be6dac72c74b0a628d3c93182af9c5a896", "2cbe6d4ef15cfc7b7805e0760a0e5b80747161ce1b0f990dfdc0d2cf497c12f9"]
 graphene-sqlalchemy = ["6d5d6687e84350b418c1eca780191526bbd24e53523a0781f70ad2e1bdc64651", "fda3a131149a96f02b18c4d8276102edd80ba22b92939c9a3fc94bda699c1477"]

@@ -1,10 +1,12 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_graphql import GraphQLView
 from queidea_graphql.graphql import schema
 from queidea_graphql.graphql.middlewares import auth_middleware
 
 
 app = Flask(__name__)
+CORS(app)
 
 
 def runapp():

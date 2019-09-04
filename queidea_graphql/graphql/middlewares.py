@@ -17,13 +17,15 @@ class AuthenticationMiddleware(object):
                  get_jwt_payload_fn,
                  secret,
                  algoritm,
-                 enabled):
+                 enabled,
+                 audience):
         self.resolve_identity = resolve_identity
         self.get_jwt_payload_fn = get_jwt_payload_fn
         self.auth_header_prefix = auth_header_prefix
         self.secret = secret
         self.algorithm = algoritm
         self.enabled = enabled
+        self.audience = audience
 
     def resolve(self, next, root, info, **kwargs):
         """
@@ -54,11 +56,17 @@ class AuthenticationMiddleware(object):
 
         # adds identity to execution context
         try:
-            user_info = self.check_auth(local_request.headers[DEFAULT_AUTH_HEADER])
+            log.debug("middleware/auth/header")
+            auth_header = local_request.headers[DEFAULT_AUTH_HEADER]
+
+            log.debug("middleware/auth/check")
+            user_info = self.check_auth(auth_header)
+
+            log.debug("middleware/auth/context")
             info.context = info.context.copy()
             info.context.update(user_info)
         except GenericError as e:
-            log.error("middleware/auth/error", headers=local_request.headers)
+            log.error("middleware/auth/error", error=e)
             return Promise.reject(GraphQLError(e.message))
 
         # if auth was present and it auth checking was successful then
@@ -72,7 +80,8 @@ class AuthenticationMiddleware(object):
         payload = self.get_jwt_payload_fn(authorization_value=authorization_value,
                                           auth_header_prefix=self.auth_header_prefix,
                                           secret=self.secret,
-                                          algorithm=self.algorithm)
+                                          algorithm=self.algorithm,
+                                          audience=self.audience)
 
         if not payload:
             raise GenericError('API_ERRORS.INVALID_TOKEN')
@@ -91,7 +100,8 @@ DEFAULT_AUTH_HEADER_PREFIX = config.security.prefix or 'JWT'
 DEFAULT_ALGORITHM = config.security.algorithm or 'HS256'
 DEFAULT_RESOLVE_IDENTITY = resolve_identity
 DEFAULT_GET_PAYLOAD_FN = get_jwt_payload
-DEFAULT_ENABLED = True
+DEFAULT_ENABLED = True,
+DEFAULT_AUDIENCE = config.security.audience
 
 auth_middleware = AuthenticationMiddleware(
     auth_header_prefix=DEFAULT_AUTH_HEADER_PREFIX,
@@ -99,5 +109,6 @@ auth_middleware = AuthenticationMiddleware(
     get_jwt_payload_fn=DEFAULT_GET_PAYLOAD_FN,
     secret=DEFAULT_SECRET,
     algoritm=DEFAULT_ALGORITHM,
-    enabled=DEFAULT_ENABLED
+    enabled=DEFAULT_ENABLED,
+    audience=DEFAULT_AUDIENCE
 )

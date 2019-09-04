@@ -5,4 +5,5 @@ security:
     algorithm: RSA
     header: Authorization
     prefix: JWT
+    audience: account
 

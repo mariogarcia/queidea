@@ -1,15 +1,18 @@
 from jwt import InvalidTokenError, decode
+from queidea_graphql.config.logger import log
 from queidea_graphql.graphql.errors import GenericError
 
 
-def get_jwt_payload(authorization_value, auth_header_prefix=None, secret=None, algorithm=None):
+def get_jwt_payload(authorization_value, auth_header_prefix=None, secret=None, algorithm=None, audience=None):
     """
     Checks whether the token is valid and it carries a valid identity
     """
     try:
+        log.debug("crypto/items")
         items = authorization_value.split()
 
         if not len(items) == 2:
+            log.error("crypto/items/error/length", items=items)
             return None
 
         prefix = items[0]
@@ -17,10 +20,17 @@ def get_jwt_payload(authorization_value, auth_header_prefix=None, secret=None, a
 
         # checking prefix
         if prefix != auth_header_prefix:
+            log.error("crypto/prefix/error/different", prefix=prefix, required=auth_header_prefix)
             return None
 
-        payload = decode(token, secret, algorithms=[algorithm])
-    except InvalidTokenError:
+        payload = decode(
+            token,
+            secret,
+            audience=audience,
+            algorithms=[algorithm]
+        )
+    except InvalidTokenError as error:
+        log.error("crypto/token/error", error=error)
         return None
 
     return payload
@@ -30,16 +40,20 @@ def resolve_identity(payload, allow_device_tokens=False, leeway_minutes=0):
     """
     Resolves user basic security information such as email and roles
     """
-    if not payload or 'email' not in payload or 'token' not in payload:
+    log.debug('crypto/identity/payload', payload=payload)
+    if not payload or 'email' not in payload:
         raise GenericError('API_ERRORS.INVALID_JWT_PAYLOAD')
 
     email = payload['email']
-    roles = payload['roles']
+    # roles = payload[['roles']
 
-    if not email or roles:
-        raise GenericError('API_ERRORS.BAD_CREDENTIALS')
+    # if not email or roles:
+    #    raise GenericError('API_ERRORS.BAD_CREDENTIALS')
 
-    return payload
+    return {
+        "email": email,
+        "roles": []
+    }
 
 
 def get_authorized_user_via_token(authorization_value, allow_device_tokens=False, leeway_minutes=0):
