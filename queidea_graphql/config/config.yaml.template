@@ -3,3 +3,6 @@ database:
 security:
     secret: bla
     algorithm: RSA
+    header: Authorization
+    prefix: JWT
+

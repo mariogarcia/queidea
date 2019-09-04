@@ -1,5 +1,4 @@
 from jwt import InvalidTokenError, decode
-from queidea_graphql.config.yaml import config
 from queidea_graphql.graphql.errors import GenericError
 
 
@@ -7,10 +6,6 @@ def get_jwt_payload(authorization_value, auth_header_prefix=None, secret=None, a
     """
     Checks whether the token is valid and it carries a valid identity
     """
-    secret = secret or config.security.secret
-    algorithm = algorithm or config.security.algorithm
-    auth_header_prefix = auth_header_prefix or "JWT"
-
     try:
         items = authorization_value.split()
 

@@ -1,27 +1,23 @@
 from graphql import GraphQLError
 from promise import Promise
+from queidea_graphql.config.logger import log
 from queidea_graphql.graphql.errors import GenericError
 from queidea_graphql.security.crypto import get_jwt_payload, resolve_identity
+from queidea_graphql.config.yaml import config
 
 EMPTY_CONTEXT = {}
 AUTH_USER = 'user_info'
-DEFAULT_SECRET = 'secret'
-DEFAULT_AUTH_HEADER = 'Authorization'
-DEFAULT_AUTH_HEADER_PREFIX = 'JWT'
-DEFAULT_ALGORITHM = 'HS256'
-DEFAULT_CHECK_FN = None
-DEFAULT_GET_PAYLOAD_FN = None
-DEFAULT_ENABLED = True
-
 WHITE_LIST = ['IntrospectionQuery']
 
 
 class AuthenticationMiddleware(object):
     def __init__(self,
-                 auth_header_prefix=DEFAULT_AUTH_HEADER_PREFIX,
-                 resolve_identity=DEFAULT_CHECK_FN,
-                 get_jwt_payload_fn=DEFAULT_GET_PAYLOAD_FN,
-                 enabled=DEFAULT_ENABLED):
+                 auth_header_prefix,
+                 resolve_identity,
+                 get_jwt_payload_fn,
+                 secret,
+                 algoritm,
+                 enabled):
         self.resolve_identity = resolve_identity
         self.get_jwt_payload_fn = get_jwt_payload_fn
         self.auth_header_prefix = auth_header_prefix
@@ -60,6 +56,7 @@ class AuthenticationMiddleware(object):
             info.context = info.context.copy()
             info.context.update(user_info)
         except GenericError as e:
+            log.error("[middleware/auth/error]", local_request.headers)
             return Promise.reject(GraphQLError(e.message))
 
         # if auth was present and it auth checking was successful then
@@ -70,9 +67,9 @@ class AuthenticationMiddleware(object):
         """
         Checks whether the token is valid and it carries a valid identity
         """
-
         payload = self.get_jwt_payload_fn(authorization_value=authorization_value,
-                                          auth_header_prefix=self.auth_header_prefix, secret=self.secret,
+                                          auth_header_prefix=self.auth_header_prefix,
+                                          secret=self.secret,
                                           algorithm=self.algorithm)
 
         if not payload:
@@ -86,5 +83,19 @@ class AuthenticationMiddleware(object):
         return {AUTH_USER: identity}
 
 
-auth_middleware = AuthenticationMiddleware(resolve_identity=resolve_identity,
-                                           get_jwt_payload_fn=get_jwt_payload)
+DEFAULT_SECRET = config.security.secret or 'secret'
+DEFAULT_AUTH_HEADER = config.security.header or 'Authorization'
+DEFAULT_AUTH_HEADER_PREFIX = config.security.prefix or 'JWT'
+DEFAULT_ALGORITHM = config.security.algorithm or 'HS256'
+DEFAULT_RESOLVE_IDENTITY = resolve_identity
+DEFAULT_GET_PAYLOAD_FN = get_jwt_payload
+DEFAULT_ENABLED = True
+
+auth_middleware = AuthenticationMiddleware(
+    auth_header_prefix=DEFAULT_AUTH_HEADER_PREFIX,
+    resolve_identity=DEFAULT_RESOLVE_IDENTITY,
+    get_jwt_payload_fn=DEFAULT_GET_PAYLOAD_FN,
+    secret=DEFAULT_SECRET,
+    algoritm=DEFAULT_ALGORITHM,
+    enabled=DEFAULT_ENABLED
+)

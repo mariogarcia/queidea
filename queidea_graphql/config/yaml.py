@@ -9,9 +9,11 @@ CONFIG_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Wraps security configuration properties
 class Security(object):
-    def __init__(self, secret=None, algorithm=None):
+    def __init__(self, secret=None, algorithm=None, header=None, prefix=None):
         self.secret = secret
         self.algorithm = algorithm
+        self.header = header
+        self.prefix = prefix
 
 
 # Wraps database configuration properties
