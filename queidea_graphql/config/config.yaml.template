@@ -6,4 +6,6 @@ security:
     header: Authorization
     prefix: JWT
     audience: account
+cors:
+    enabled: true
 

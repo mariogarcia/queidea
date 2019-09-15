@@ -15,10 +15,8 @@ def get_jwt_payload(authorization_value, auth_header_prefix=None, secret=None, a
             log.error("crypto/items/error/length", items=items)
             return None
 
-        prefix = items[0]
-        token = items[1]
+        prefix, token = items
 
-        # checking prefix
         if prefix != auth_header_prefix:
             log.error("crypto/prefix/error/different", prefix=prefix, required=auth_header_prefix)
             return None
@@ -45,14 +43,14 @@ def resolve_identity(payload, allow_device_tokens=False, leeway_minutes=0):
         raise GenericError('API_ERRORS.INVALID_JWT_PAYLOAD')
 
     email = payload['email']
-    # roles = payload[['roles']
+    roles = payload['roles']
 
-    # if not email or roles:
-    #    raise GenericError('API_ERRORS.BAD_CREDENTIALS')
+    if not email or roles:
+        raise GenericError('API_ERRORS.BAD_CREDENTIALS')
 
     return {
         "email": email,
-        "roles": []
+        "roles": roles
     }
 
 

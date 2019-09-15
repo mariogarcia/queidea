@@ -25,9 +25,16 @@ class Database(object):
 
 # Wraps configuration properties
 class Configuration(object):
-    def __init__(self, database, security):
+    def __init__(self, database, security, cors):
         self.database = Database(**database)
         self.security = Security(**security)
+        self.cors = Cors(**cors)
+
+
+# Cors configuration
+class Cors(object):
+    def __init__(self, enabled):
+        self.enabled = enabled
 
 
 # Creates application's configuration from a given
@@ -46,7 +53,8 @@ def create_config(config_file_path):
             configuration = yaml.safe_load(stream)
             return Configuration(
                 configuration['database'],
-                configuration['security']
+                configuration['security'],
+                configuration['cors']
             )
         except yaml.YAMLError as error:
             log.error(error)
