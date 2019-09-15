@@ -43,14 +43,15 @@ def resolve_identity(payload, allow_device_tokens=False, leeway_minutes=0):
         raise GenericError('API_ERRORS.INVALID_JWT_PAYLOAD')
 
     email = payload['email']
-    roles = payload['roles']
+    # roles = payload['roles']
 
-    if not email or roles:
-        raise GenericError('API_ERRORS.BAD_CREDENTIALS')
+    # if not email or roles:
+    #    raise GenericError('API_ERRORS.BAD_CREDENTIALS')
 
     return {
         "email": email,
-        "roles": roles
+        "roles": []
+        # "roles": roles
     }
 
 
