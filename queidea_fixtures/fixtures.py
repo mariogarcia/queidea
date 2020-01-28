@@ -21,6 +21,7 @@ def create_data():
     """
     group = Group(uuid=generate_id(), name="programming")
     db_session.add(group)
+    db_session.flush()
     log.msg("fixtures/data/group", uuid=group.uuid, name=group.name)
 
     for i in range(1, 10):
